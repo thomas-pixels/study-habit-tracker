@@ -31,6 +31,44 @@ def test_post_log_valid_session_appears_in_list(client):
     assert "2026-09-07" in html
 
 
+def test_page_shows_streak_strip_and_hours(client):
+    # Log sessions on two consecutive days ending today, so the streak is 2
+    # and the headline uses the plural "days in a row!".
+    client.post(
+        "/log",
+        data={
+            "subject": "History",
+            "duration": "45",
+            "note": "note",
+            "date": "2026-09-07",
+        },
+    )
+    client.post(
+        "/log",
+        data={
+            "subject": "Math",
+            "duration": "60",
+            "note": "note",
+            "date": "2026-09-08",
+        },
+    )
+    html = client.get("/").get_data(as_text=True)
+
+    assert "Your progress" in html
+    assert "days in a row!" in html
+    assert "Last 7 days" in html
+    assert "Total hours per subject" in html
+    assert "Math" in html
+
+
+def test_page_shows_start_message_when_no_sessions(client):
+    html = client.get("/").get_data(as_text=True)
+
+    assert "Your progress" in html
+    assert "Start your streak today!" in html
+    assert "Log a session to begin." in html
+
+
 def test_post_log_invalid_session_shows_error_and_stores_nothing(client):
     response = client.post(
         "/log",

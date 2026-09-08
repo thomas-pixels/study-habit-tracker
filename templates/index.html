@@ -34,6 +34,35 @@
             <button type="submit">Log session</button>
         </form>
 
+        <section class="overview">
+            <h2>Your progress</h2>
+
+            <div class="streak-headline">
+                {{ headline }}
+            </div>
+
+            <div class="strip">
+                {% for day, studied in strip %}
+                <div class="day{% if studied %} studied{% endif %}" title="{{ day }}">
+                    <span class="day-label">{{ day[8:10] }}</span>
+                    <span class="dot"></span>
+                </div>
+                {% endfor %}
+            </div>
+            <p class="strip-caption">Last 7 days — filled means you studied that day.</p>
+
+            <p class="encouragement">{{ message }}</p>
+
+            {% if hours %}
+            <h3>Total hours per subject</h3>
+            <ul class="hours-list">
+                {% for subject, total in hours %}
+                <li><strong>{{ subject }}</strong>: {{ total }} h</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </section>
+
         <h2>Your sessions</h2>
         {% if sessions %}
         <ul class="session-list">

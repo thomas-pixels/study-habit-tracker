@@ -5,10 +5,30 @@ from datetime import date
 from flask import Blueprint, redirect, render_template, request
 
 import db
+import stats
 import validation
 from log import logged
 
 bp = Blueprint("main", __name__)
+
+
+def _render_index(sessions, error=None, form=None):
+    """Render the page with all stats computed from the sessions (DRY)."""
+    today = date.today().isoformat()
+    streak = stats.streak(sessions, today=today)
+    headline, message = stats.streak_message(streak)
+    return render_template(
+        "index.html",
+        sessions=sessions,
+        error=error,
+        form=form,
+        today=today,
+        strip=stats.last_7_days_strip(sessions, today=today),
+        streak=streak,
+        headline=headline,
+        message=message,
+        hours=stats.hours_per_subject(sessions),
+    )
 
 
 @bp.route("/")
@@ -16,8 +36,7 @@ bp = Blueprint("main", __name__)
 def index():
     """Show the log form and the session list, newest first."""
     sessions = db.get_all_sessions()
-    today = date.today().isoformat()
-    return render_template("index.html", sessions=sessions, error=None, form=None, today=today)
+    return _render_index(sessions)
 
 
 @bp.route("/log", methods=["POST"])
@@ -34,9 +53,7 @@ def log_session():
     if error is None:
         db.insert_session(subject.strip(), int(duration), note, session_date)
         sessions = db.get_all_sessions()
-        return render_template(
-            "index.html", sessions=sessions, error=None, form=None, today=date.today().isoformat()
-        )
+        return _render_index(sessions)
 
     sessions = db.get_all_sessions()
     form_data = {
@@ -45,9 +62,7 @@ def log_session():
         "note": note,
         "date": session_date,
     }
-    return render_template(
-        "index.html", sessions=sessions, error=error, form=form_data, today=date.today().isoformat()
-    )
+    return _render_index(sessions, error=error, form=form_data)
 
 
 @bp.route("/delete/<int:session_id>", methods=["POST"])

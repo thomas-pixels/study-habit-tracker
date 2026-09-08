@@ -93,3 +93,67 @@ h1 {
 .empty {
     color: #777;
 }
+
+/* --- Progress overview --- */
+
+.overview {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1.5rem 0;
+}
+
+.streak-box {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+}
+
+.streak-headline {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d6a4f;
+    margin-bottom: 0.8rem;
+}
+
+.encouragement {
+    color: #555;
+    margin: 0.6rem 0 0;
+    font-style: italic;
+}
+
+.strip {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.day {
+    flex: 1;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.4rem 0;
+    background: #f2f2f2;
+}
+
+.day.studied {
+    background: #2d6a4f;
+    border-color: #2d6a4f;
+    color: #fff;
+}
+
+.day-label {
+    display: block;
+    font-size: 0.8rem;
+}
+
+.strip-caption {
+    color: #777;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.hours-list {
+    margin: 0;
+    padding-left: 1.2rem;
+}
