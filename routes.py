@@ -23,6 +23,7 @@ def _render_index(sessions, error=None, form=None):
         error=error,
         form=form,
         today=today,
+        subjects=validation.SUBJECTS,
         strip=stats.last_7_days_strip(sessions, today=today),
         streak=streak,
         headline=headline,

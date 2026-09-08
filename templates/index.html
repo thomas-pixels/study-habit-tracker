@@ -16,8 +16,15 @@
 
         <form method="post" action="{{ url_for('main.log_session') }}" class="log-form">
             <label for="subject">Subject</label>
-            <input type="text" id="subject" name="subject"
-                   value="{{ form.subject if form else '' }}" placeholder="e.g. Math">
+            <select id="subject" name="subject">
+                {% for subject in subjects %}
+                <option value="{{ subject }}"
+                        {% if not form and loop.first %}selected{% endif %}
+                        {% if form and form.subject == subject %}selected{% endif %}>
+                    {{ subject }}
+                </option>
+                {% endfor %}
+            </select>
 
             <label for="duration">Duration (minutes)</label>
             <input type="number" id="duration" name="duration" min="1" max="1440"

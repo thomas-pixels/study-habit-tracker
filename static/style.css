@@ -32,7 +32,8 @@ h1 {
     font-weight: 600;
 }
 
-.log-form input {
+.log-form input,
+.log-form select {
     width: 100%;
     box-sizing: border-box;
     padding: 0.5rem;

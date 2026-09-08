@@ -1,5 +1,7 @@
 """Tests for the HTTP routes (tests written first — Red)."""
 
+import validation
+
 
 def test_get_root_shows_the_form(client):
     response = client.get("/")
@@ -10,6 +12,24 @@ def test_get_root_shows_the_form(client):
     assert 'name="duration"' in html
     assert 'name="note"' in html
     assert 'name="date"' in html
+
+
+def test_form_has_one_option_per_subject_from_the_list(client):
+    html = client.get("/").get_data(as_text=True)
+
+    for subject in validation.SUBJECTS:
+        assert f"value=\"{subject}\"" in html
+
+
+def test_post_log_subject_not_in_list_is_rejected(client):
+    response = client.post(
+        "/log",
+        data={"subject": "Maths", "duration": "60", "note": "note", "date": "2026-09-07"},
+    )
+
+    assert response.status_code == 200
+    html = response.get_data(as_text=True)
+    assert "Please pick a subject from the list." in html
 
 
 def test_post_log_valid_session_appears_in_list(client):

@@ -34,6 +34,7 @@ Remaining polish before closing this milestone:
 - Combine the strip + streak + hours into a clearer daily "progress view."
   ✅ Done (2026-09-08)
 - Cap subject names to a fixed list to avoid typos ("Math" vs "maths").
+  ✅ Done (2026-09-08)
 
 ## Long-term vision
 
