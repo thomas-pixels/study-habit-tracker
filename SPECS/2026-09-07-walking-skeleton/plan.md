@@ -124,12 +124,12 @@ A `validate_session(subject, duration, note, date)` function that returns
 
 ## Task group 6 — Manual end-to-end verification
 
-- [ ] Run `python app.py`.
-- [ ] Visit the page, log a session, confirm it appears in the list.
-- [ ] Stop the server, restart it, confirm the session is still in the list.
-- [ ] Submit an empty subject, confirm the error message appears.
-- [ ] Click "Delete" on a session, confirm it disappears from the list.
-- [ ] Bind to `0.0.0.0`, use the Codio public URL, and verify it responds
+- [x] Run `python app.py`.
+- [x] Visit the page, log a session, confirm it appears in the list.
+- [x] Stop the server, restart it, confirm the session is still in the list.
+- [x] Submit an empty subject, confirm the error message appears.
+- [x] Click "Delete" on a session, confirm it disappears from the list.
+- [x] Bind to `0.0.0.0`, use the Codio public URL, and verify it responds
       before announcing the site is live (see AGENTS.md).
 
 ---

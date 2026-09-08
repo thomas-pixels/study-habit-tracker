@@ -72,9 +72,9 @@ The root renderer passes the message data to the template.
 
 ## Task group 5 — Full-suite + manual verification
 
-- [ ] `python -m pytest` — all tests pass (green).
-- [ ] Run `python app.py`, verify through the Codio public URL.
-- [ ] Manual checks (per validation.md):
+- [x] `python -m pytest` — all tests pass (green).
+- [x] Run `python app.py`, verify through the Codio public URL.
+- [x] Manual checks (per validation.md):
       - log a session → headline updates, strip fills;
       - restart server → data and headline persist;
       - invalid submit → error, nothing stored;

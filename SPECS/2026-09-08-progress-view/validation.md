@@ -18,24 +18,24 @@ The progress view is done when all of the following hold.
 ### Manual checks in the browser
 
 1. **Add a record & see the progress view update.**
-   - Open the page: no sessions → "Start your streak today!" and an empty
+   - [x] Open the page: no sessions → "Start your streak today!" and an empty
      strip.
-   - Log a session for today → the streak headline counts it and today's box
+   - [x] Log a session for today → the streak headline counts it and today's box
      fills.
-   - Log sessions for several past days → the strip fills for those days and
+   - [x] Log sessions for several past days → the strip fills for those days and
      the headline counts them.
 
 2. **Restart the server.**
-   - Stop and restart `python app.py`.
-   - The page still shows the same headline, strip, and session list (data
+   - [x] Stop and restart `python app.py`.
+   - [x] The page still shows the same headline, strip, and session list (data
      persisted in SQLite).
 
 3. **Invalid data still handled.**
-   - Submit an empty subject → error message, nothing stored.
-   - Submit duration "0" / "1441" → error message, nothing stored.
+   - [x] Submit an empty subject → error message, nothing stored.
+   - [x] Submit duration "0" / "1441" → error message, nothing stored.
 
 4. **Delete still works.**
-   - Delete a session → it disappears; strip/streak update accordingly.
+   - [x] Delete a session → it disappears; strip/streak update accordingly.
 
 ### Layout check
 
