@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study Habit Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <main class="container">
+        <h1>Study Habit Tracker</h1>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="post" action="{{ url_for('main.log_session') }}" class="log-form">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject"
+                   value="{{ form.subject if form else '' }}" placeholder="e.g. Math">
+
+            <label for="duration">Duration (minutes)</label>
+            <input type="number" id="duration" name="duration" min="1" max="1440"
+                   value="{{ form.duration if form else '' }}">
+
+            <label for="note">Note (optional)</label>
+            <input type="text" id="note" name="note"
+                   value="{{ form.note if form else '' }}" placeholder="What did you do?">
+
+            <label for="date">Date</label>
+            <input type="date" id="date" name="date"
+                   value="{{ form.date if form else today }}">
+
+            <button type="submit">Log session</button>
+        </form>
+
+        <h2>Your sessions</h2>
+        {% if sessions %}
+        <ul class="session-list">
+            {% for session in sessions %}
+            <li class="session">
+                <div class="session-details">
+                    <strong>{{ session.subject }}</strong> —
+                    {{ session.duration }} min
+                    {% if session.note %}<span class="note">{{ session.note }}</span>{% endif %}
+                    <span class="date">{{ session.date }}</span>
+                </div>
+                <form method="post" action="{{ url_for('main.delete_session', session_id=session.id) }}">
+                    <button type="submit" class="delete">Delete</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="empty">No sessions logged yet. Log your first study session!</p>
+        {% endif %}
+    </main>
+</body>
+</html>

@@ -6,69 +6,106 @@ This is the first step in the ROADMAP: the thinnest end-to-end slice of the
 Study Habit Tracker that works. Today the app has no code at all, so this
 feature builds the very first working version.
 
-The goal is one small loop: the student fills in a form, submits it, and sees
-the session appear on the page. Everything else (last-7-days strip, streak,
-hours per subject) comes in later steps and is **not** part of this spec.
+The goal is a complete loop: the student fills in a form, submits it, sees it
+appear in the list, and can delete it. Everything else (last-7-days strip,
+streak, hours per subject) comes in later steps and is not part of this spec.
 
 ## Scope
 
 In scope:
 
-- A single web page with a "Log a study session" form.
+- A single web page with a "Log a study session" form and a session list.
 - Form fields: subject (free text), duration (minutes), note (optional), date
   (defaults to today, changeable).
-- On submit, basic validation is checked; if valid, the session is stored in
-  the SQLite database.
-- The page also shows a chronological list of all logged sessions (newest
-  first), so the student can see their session appear.
+- On submit, validation runs; if valid, the session is stored in the SQLite
+  database and appears in the list on the same page.
+- On submit, if invalid, a friendly error message appears and nothing is
+  stored.
+- A "Delete" link on each session that removes it from the database and the
+  list.
+- Data survives a server restart (SQLite on disk).
 - Simple vanilla HTML/CSS/JS; no frameworks.
 
 Out of scope (later steps):
 
 - Last-7-days strip, streak counter, total hours per subject.
-- Any editing or deleting of sessions.
+- Editing a session (changing its fields after logging).
 - Any styling beyond clean, readable basics.
 
 ## User story
 
 > As a student, I can log a study session (subject, minutes, optional note,
-> date) and immediately see it in the list on the page, so I know the app
-> works end to end.
+> date) and see it appear in the list, then delete it if I made a mistake —
+> and the data is still there after a restart.
 
-## Decisions (made with the user)
+---
 
-| Question | Decision |
-|----------|----------|
-| How is the subject entered? | Free-text field |
-| How is the date handled? | Defaults to today, changeable |
-| What does "see it appear" mean? | A chronological list on the same page |
-| How strict is validation? | Basic checks on submit |
+## Entities to store
 
-## Functional requirements
+One entity: **Study Session**.
 
-1. The app serves one page at `/` that contains the log form and the session
-   list.
-2. The form has a subject text field, a duration number field, an optional
-   note field, and a date field that pre-fills with today's date.
-3. Submitting a **valid** form stores the session in the `study_sessions`
-   table and re-renders the page with the new session in the list.
-4. Submitting an **invalid** form shows a friendly error message and does not
-   store anything. Validation rules:
-   - subject: non-empty
-   - duration: a positive whole number (minutes)
-5. The list shows all sessions, newest first, with subject, duration, note,
-   and date visible.
+### Required fields
 
-## Data model
+| Field | Type | Constraint | Example |
+|-------|------|------------|---------|
+| `id` | INTEGER | Primary key, auto-increment, set by the database | `1` |
+| `subject` | TEXT | Not empty after trimming whitespace | `"Math"` |
+| `duration` | INTEGER | Greater than zero, at most 1440 (one day in minutes) | `60` |
+| `note` | TEXT | Optional; may be empty or blank | `"Reviewed algebra"` |
+| `date` | TEXT | Not empty; stored as `YYYY-MM-DD` | `"2026-09-07"` |
 
-Single SQLite table, one row per session:
+### Constraints
+
+- **subject:** must not be empty or whitespace only.
+- **duration:** must be a whole number, greater than zero, at most 1440.
+- **date:** must be present and in `YYYY-MM-DD` format.
+- **note:** no constraint; a blank note is allowed.
+
+---
+
+## What the user sees after each action
+
+### Log a study session (valid form)
+
+- The page refreshes.
+- The new session appears at the top of the list (newest first).
+- The form is shown again, ready for the next session.
+
+### Log a study session (invalid form)
+
+- A friendly error message appears near the form (e.g. "Please enter a
+  subject.").
+- Nothing is stored in the database.
+- The form values the student entered are kept in the form so they do not
+  have to retype everything.
+
+### Delete a session
+
+- The student clicks "Delete" on a session row.
+- A confirmation page (or a `POST` request) removes the session from the
+  database.
+- The page reloads and the session is gone from the list.
+
+---
+
+## Behaviour after a server restart
+
+The SQLite database is a file on disk (`study_tracker.db`). When the server
+stops and starts again, all saved sessions are still there and appear in the
+list as before.
+
+---
+
+## Data model (SQLite)
+
+Single table, one row per session:
 
 ```
 Table: study_sessions
 - id:        INTEGER PRIMARY KEY AUTOINCREMENT
 - subject:   TEXT    NOT NULL
 - duration:  INTEGER NOT NULL
-- note:      TEXT    (optional, may be empty)
+- note:      TEXT
 - date:      TEXT    NOT NULL  (YYYY-MM-DD)
 ```
 
